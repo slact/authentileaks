@@ -1,0 +1,51 @@
+!!!
+
+%html
+  %head
+    %meta(http-equiv="Content-Type" content="text/html; charset=utf-8")
+    %meta(name="keywords" content="wikileaks podesta email HRC clinton DKIM verification search engine")
+    %meta(name="description" content="Check the cryptographically authentication of wikileaks emails.")
+    
+    %link(rel="icon" href="/icons/tiny.png" sizes="16x16" type="image/png")
+    %link(rel="icon" href="/icons/small.png" sizes="32x32" type="image/png")
+    %link(rel="icon" href="/icons/iphone.png" sizes="57x57" type="image/png")
+    %link(rel="icon" href="/icons/icon.svg" sizes="any" type="image/svg+xml")
+    
+    %script(type="text/javascript" src="/js/mootools-core.js")
+    %script(type="text/javascript" src="/js/mootools-more.js")
+    -#%script(type="text/javascript" src="/js/MessageMonitor.js")
+    %script(type="text/javascript" src="/js/NchanSubscriber.js")
+    -#%script(type="text/javascript" src="/js/DataClasses.js")
+    -#%script(type="text/javascript" src="/js/mootools-tiny.js")
+    %script(type="text/javascript" src="/js/common.js")
+    
+    %link(rel="stylesheet" type="text/css" href="/css/styles.css")
+    %link(rel="stylesheet" type="text/css" href="/css/pygments.css")
+    
+    %title="Authentileaks - Irrefutably authentic emails from the Podesta email leaks."
+  
+  %body
+    .header
+      %img.logo(src='/img/Authentileaks_logo.png' alt="Authentileaks logo")
+      %a.logo-overlay(href='/')
+      %ul.navigation
+        %li
+          %a(href="/#about")="about"
+    
+    %ul.announcement
+      %li.nginxconf="nothing here"
+    
+    #page.page=yield
+    
+    .barter
+      %h2="What's this?"
+      :markdown
+        Uhh what?
+        
+      %h3="Support"
+      #contribute
+        %img.btc-QR(src="img/bitcoin-QR.png" alt="--btc--")
+        Please help!
+      
+    .closer
+      %img(src="/icons/kopimi.png" alt="copy, but don't plagiarise")
