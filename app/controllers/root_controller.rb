@@ -7,11 +7,19 @@ class Authentileaks::RootController < Authentileaks::Application
 
     email= Email.find(params["id"])
     
-    if !email
+    #if email
+    #  email.sigs.each do |sig|
+    #    sig.delete
+    #  end
+    #  email.delete
+    #end
+    
+    unless email
       EmailWorker.perform_async(params["id"])
+      email=Email.new
     end
     
-    render 'email'
+    render 'email', email: email
   end
   
   #404
