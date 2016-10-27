@@ -7,9 +7,15 @@ Bundler.require :default, ENV['RACK_ENV'].to_sym
 
 module Authentileaks
   class Application < Hobbit::Base
+    def self.descendants
+      ObjectSpace.each_object(Class).select { |klass| klass < self }
+    end
+    
+    
+    include Hobbit::Render
+    #include Hobbit::Session
     #include Hobbit::Filter
     include Hobbit::Environment
-    #include Hobbit::Session
     
     #load config
     all_conf=YAML.load_file 'config/env.yml'
@@ -19,9 +25,7 @@ module Authentileaks
       @@config
     end
     
-    #initialize sprunger client
     Queris.add_redis Redis.new(url: conf["redis_url"])
-    #Queris.log_stats_per_request!
     
     use Rack::Config do |env|
       all_conf[ENV['RACK_ENV'].to_s].each do |cf, val|
@@ -30,8 +34,8 @@ module Authentileaks
     end
     
     (Dir['config/initializers/**/*.rb'] + 
-     Dir['app/controllers/**/*.rb'] +
-     Dir['app/models/**/*.rb']).each do |file| 
+     Dir['app/models/**/*.rb'] +
+     Dir['app/controllers/**/*.rb']).each do |file| 
       require File.expand_path(file)
     end
 
@@ -46,6 +50,41 @@ module Authentileaks
     #static resources
     use Rack::Static, root: 'app/assets/', urls: ['/js', '/css', '/img', '/icons', '/documents']
     use Rack::Static, root: 'app/assets/', urls: ['/packages']
+    
+    def find_template(template)
+      tmpl_path=@@templates[template.to_sym]
+      raise "template #{template} not found" unless tmpl_path
+      tmpl_path
+    end
+    def default_layout
+      find_template :"layouts/application"
+    end
+    def template_engine
+      raise "template_engine shouldn't be called"
+    end
+      
+    #convenience methods
+    def user
+      env['warden'].user
+    end
+    
+
+    def set_content_type (val)
+      response.headers["Content-Type"]=val
+    end
+    def json_response!
+      set_content_type "application/json"
+    end
+    def js_response!
+      set_content_type "application/javascript"
+    end
+    
+    def params
+      request.params
+    end
+    def param(name)
+      params[name]
+    end
     
   end
 end

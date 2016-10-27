@@ -13,6 +13,9 @@ gem 'git'
 gem 'mail'
 gem 'rubydkim'
 
+gem 'sidekiq'
+gem 'typhoeus'
+
 #rack stuff
 gem 'warden'
 gem 'rack-contrib'
@@ -35,16 +38,10 @@ gem "redd"
 gem 'hiredis'
 gem 'redis', :require => ["redis/connection/hiredis", "redis"]
 
-gem 'queris', :github => "slact/queris"
+gem 'queris', git: "https://github.com/slact/queris.git"
 
-gem 'hobbit', github: 'slact/hobbit'
-#if File.directory?(queris_path= File.expand_path("../hobbit"))
-#  gem 'hobbit', :path => queris_path
-#else
-#  gem 'hobbit', github: 'slact/hobbit'
-#end
-
-gem 'hobbit-contrib', github: 'slact/hobbit-contrib', require: 'hobbit/contrib'
+gem 'hobbit', git: 'https://github.com/slact/hobbit.git'
+gem 'hobbit-contrib', git: 'https://github.com/slact/hobbit-contrib.git', require: 'hobbit/contrib'
 gem 'i18n'
 gem 'rack-protection'
 # Uncomment this if you want to use Sass
@@ -52,6 +49,7 @@ gem 'rack-protection'
 gem 'sprockets'
 gem 'tilt'
 gem 'thin'
+gem 'pandoc-ruby'
 
 group :development do
   gem "pry"

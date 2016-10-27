@@ -1,44 +1,19 @@
-class Authentileaks::RootController < Authentileaks::ApplicationController
+class Authentileaks::RootController < Authentileaks::Application
   get '/' do
-    render 'README'
+    render 'index'
   end
   
-  get '/readme' do
-    #maybe_reload_templates 
-    response.redirect '/'
-  end
-  
-  get '/upgrade' do
-    render 'upgrade'
-  end
-  
-  get '/changelog' do
-    #maybe_reload_templates 
-    render 'changelog'
-  end
-  
-  get '/details' do
-    render 'details'
-  end
-  
-  get '/experiment' do
-    render 'experiment'
-  end
-  
-  get '/nginxconf' do
-    response.redirect '/nginxconf2016'
-  end
-  get '/nginxconf2016' do
-    render 'nginxconf2016'
-  end
+  get /(?<id>\d+)/ do
+
+    email= Email.find(params["id"])
     
+    if !email
+      EmailWorker.perform_async(params["id"])
+    end
+    
+    render 'email'
+  end
   
-  get '/redisconf' do
-    response.redirect '/redisconf2016'
-  end
-  get '/redisconf2016' do
-    render 'redisconf2016'
-  end
   #404
   any /.*/, [:get, :post, :put, :delete] do
     response.status = 404

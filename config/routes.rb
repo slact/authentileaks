@@ -1,9 +1,10 @@
+require "pry" 
 module Authentileaks
   class Application < Hobbit::Base
     use Rack::MethodOverride
     
     #autoload controllers, mapping them to basic routes by name
-    ApplicationController.descendants.each do |ctrl|
+    descendants.each do |ctrl|
       name=ctrl.name.match(".*?::(.*)Controller")[1].downcase!
       if name == "root"
         url="/"

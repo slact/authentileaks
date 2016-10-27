@@ -1,5 +1,5 @@
 require "pry"
-class Authentileaks::AuthController < Authentileaks::ApplicationController
+class Authentileaks::AuthController < Authentileaks::Application
   def warden
     env['warden']
   end
