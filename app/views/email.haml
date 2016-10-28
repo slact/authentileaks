@@ -1,4 +1,7 @@
-
+.email-nav.email-nav-before
+  - if email.id.to_i > 1
+    %a(href="/#{email.id.to_i-1}")="< previous"
+  %a(href="/#{email.id.to_i+1}")="next >"
 .email
   %table.headers
     %tr.id
@@ -25,7 +28,10 @@
       %td{:"data-json" => email.sigs.to_json}
       
   %p.body=email.body
-
+.email-nav.email-nav-after
+  - if email.id.to_i > 1
+    %a(href="/#{email.id.to_i-1}")="< previous"
+  %a(href="/#{email.id.to_i+1}")="next >"
 :javascript
   "use strict";
   document.addEvent('domready', function() {

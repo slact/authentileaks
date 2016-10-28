@@ -134,7 +134,20 @@ tr.sig-validating td::before {
 .email .inauthentic th {
   background: #ffdddd !important;
 }
+.email-nav {
+  font-family: sans-serif;
+}
 
+.email-nav-before {
+  text-align: right;
+  margin-right: 5px;
+  margin-bottom:5px;
+}
+
+.email-nav-after {
+  text-align: center;
+  padding:5px;
+}
 .email .body {
   border: 1px solid #d8d8d8;
   border-radius: 2px;
