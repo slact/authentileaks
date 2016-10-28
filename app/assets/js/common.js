@@ -33,14 +33,14 @@ function waitForEmail(id) {
     switch(type) {
       case "loading":
         //do nothing
-        emailEl.removeClass('hidden').addClass('loading');
-        emailEl.getElement('.headers .sig').addClass('loading');
+        emailEl.removeClass('hidden').addClass('email-loading');
+        emailEl.getElement('.headers .sig').addClass('sig-validating');
         emailEl.getElement('.headers .sig td').empty();
         break;
       case "email":
         new Email(data, emailEl);
         niceDate();
-        emailEl.removeClass('loading');
+        emailEl.removeClass('email-loading');
         break;
       
       case "sigs":

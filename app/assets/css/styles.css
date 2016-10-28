@@ -94,6 +94,10 @@ tr.sig-validating td::before {
   margin-bottom:4px;
 }
 
+.email table.headers th {
+  width: 130px;
+}
+
 .email table.headers tr, .body {
   background: #e5e5e5; 
 }
