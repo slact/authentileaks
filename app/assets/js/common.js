@@ -44,7 +44,7 @@ function waitForEmail(id) {
         break;
       
       case "sigs":
-        emailEl.removeClass('sig-validating');
+        emailEl.getElement('.headers .sig').removeClass('sig-validating');
         parseSigs(data);
         break;
         
