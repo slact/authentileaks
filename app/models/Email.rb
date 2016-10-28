@@ -79,7 +79,7 @@ class Email < Queris::Model
     throw "invalid id" if v.id.nil?
     v.noload do
       if v.date && v.time.nil?
-        v.time= DateTime.parse(v.date).to_time.utc.to_f
+        v.time= DateTime.parse(v.date.to_s).to_time.utc.to_f
       end
     end
   end
