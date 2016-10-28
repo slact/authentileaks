@@ -52,6 +52,7 @@ task :parsefiles, [:path, :first, :last]  do |t, arg|
       puts "bad file #{path}"
     end
   end
+end
 
 
 task default: :test
