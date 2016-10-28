@@ -23,6 +23,7 @@ body {
 }
 .header img.drop {
   margin-left: 3px;
+  margin-right:2em;
 }
 
 .header h1 {
@@ -54,22 +55,31 @@ body {
   display: none !important;
 }
 
+.page {
+  font-family: sans-serif;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
 .email {
  margin-left:7px;
   margin-right:7px;
 }
 
-div.loading::before {
+.email-loading::before {
   content: "loading...";
 }
 
-.loading .headers {
-  display: none;
-}
-.loading .body {
-  display: none;
+tr.sig-validating td::before {
+  content: "validating...";
 }
 
+.email-loading .headers {
+  display: none;
+}
+.email-loading .body {
+  display: none;
+}
 
 .email .headers {
   width:100%;
@@ -101,4 +111,12 @@ div.loading::before {
   padding:10px;
   white-space: pre-wrap;
   font-family: monospace;
+}
+
+.footer {
+  margin-top: 5em;
+  padding: 5px;
+  font-family: sans-serif;
+  text-align: center;
+  background: #eee;
 }
