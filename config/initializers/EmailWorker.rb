@@ -1,5 +1,4 @@
 require "sidekiq"
-require 'sidekiq/testing/inline'
 require "typhoeus"
 require "mail"
 require 'dkim'
@@ -26,38 +25,77 @@ class EmailWorker
     end
   end
   
+  def conf
+    Authentileaks::Application.conf
+  end
   
-  def perform(wikileaks_id)
-    resp = Typhoeus.get("https://www.wikileaks.org/podesta-emails/get/#{wikileaks_id}", followlocation: true)
+  def pub(id, data_type, data="")
+    pub_url="http://#{conf["nchan_pub_host"]}/pub/podesta/#{id}"
     
-    if resp.code != 200
-      #error!
+    post_data = [data_type, data]
+    
+    Typhoeus.post(pub_url, headers: {'Content-Type' => 'text/json'}, body: post_data.to_json)
+  end
+  
+  def perform(id)
+    Pry.rescue do
+      puts "YEAH??"
+      email = Email.find(id)
+      puts "YEAH!!"
+      return if email && email.job_running
+
+      pub id, "loading"
+      
+      email = Email.new(id)
+      email.leakname="podesta"
+      email.job_running=true
+      email.save
+      
+      puts "RESPOND plz"
+      resp = Typhoeus.get("https://www.wikileaks.org/podesta-emails/get/#{id}", followlocation: true, timeout: 5)
+      puts "RESPONDED"
+      if resp.code != 200
+        pub id, "error", "got response code #{resp.code}"
+        email.delete
+        return 
+      end
+      
+      email.parse(resp.body)
+
+      
+      email.save
+      puts "YEEHAW I GOT AN EMAIL"
+      pub id, "email", email
+      
+      #display email
+      
+      rawmail = RawishEmail.new resp.body
+      rawmail.rename_header("X-Google-DKIM-Signature", "DKIM-Signature")
+      
+      ver = DKIM::Verifier.new
+      
+      ver.feed rawmail.to_s
+      
+      raw_sigs = ver.finish
+      
+      sigs = []
+      
+      raw_sigs.each do |sig|
+        dkim_sig = DKIMSig.new
+        dkim_sig.email_id = email.id
+        dkim_sig.parse(sig)
+        dkim_sig.save
+        
+        sigs << dkim_sig
+      end
+      
+      pub id, "sigs", sigs
+      
+      email.signed= !sigs.empty?
+      email.job_running= false
+      email.save
+      
+      pub id, "fin"
     end
-    
-    
-    email = Email.new(wikileaks_id)
-    email.parse(resp.body)
-    email.leakname="podesta"
-    email.save
-    
-    #display email
-    
-    rawmail = RawishEmail.new resp.body
-    rawmail.rename_header("X-Google-DKIM-Signature", "DKIM-Signature")
-    
-    ver = DKIM::Verifier.new
-    
-    ver.feed rawmail.to_s
-    
-    sigs = ver.finish
-    
-    sigs.each do |sig|
-      dkim_sig = DKIMSig.new
-      dkim_sig.email_id = email.id
-      dkim_sig.parse(sig)
-      dkim_sig.save
-    end
-    
-    email.sigs
   end
 end

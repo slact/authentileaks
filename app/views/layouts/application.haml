@@ -18,16 +18,19 @@
     
     %link(rel="stylesheet" type="text/css" href="/css/styles.css")
     
-    %title="Authentileaks - Irrefutably authentic emails from the Podesta email leaks."
+    %title="Authentileaks: #{title}"
   
   %body
     .header
+      %a.logo(href="/")
+        %img.logo(src="/img/logo-top.png")
+      %img.logo.drop(src="/img/logo-bottom.png")
       %h1="Authentileaks"
-      %p="Irrefutably authentic emails from the Podesta email leaks"
+      .caption="Irrefutably authentic emails from the Podesta email leaks"
       
-      %form#gotoemail(action="/email")
+      %form#gotoemail(action="/email" method="post")
         %label(for="emailid")="Email id" 
-        %input#emailid(name="emailid" type="text")      
+        %input#emailid(name="emailid" placeholder="Email ID" type="text")      
         %input(value="go" type="submit")
       
     #page.page=yield

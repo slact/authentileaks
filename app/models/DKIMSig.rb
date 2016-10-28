@@ -17,6 +17,10 @@ class DKIMSig < Queris::Model
     self.canon_headers= sig.canon_headers
   end
   
+  def to_json(*arg)
+    super
+  end
+  
   def email
     Email.find(email_id)
   end

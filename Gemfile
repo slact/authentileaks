@@ -11,10 +11,10 @@ gem 'scrypt'
 gem 'git'
 
 gem 'mail'
-gem 'rubydkim'
-
+gem 'rubydkim', github: 'slact/rubydkim'
 gem 'sidekiq'
 gem 'typhoeus'
+gem 'html_to_plain_text'
 
 #rack stuff
 gem 'warden'
@@ -22,7 +22,6 @@ gem 'rack-contrib'
 gem 'rack-abstract-format'
 gem 'rack-respond_to'
 gem 'rack-referrals'
-gem 'muster'
 gem 'rack-attack'
 gem 'chrome_logger'
 gem 'rack-detect-tor'
@@ -38,7 +37,13 @@ gem "redd"
 gem 'hiredis'
 gem 'redis', :require => ["redis/connection/hiredis", "redis"]
 
-gem 'queris', git: "https://github.com/slact/queris.git"
+#gem 'queris', git: "https://github.com/slact/queris.git"
+if File.directory?(queris_path= File.expand_path("../queris"))
+  gem 'queris', :path => queris_path
+else
+  gem 'queris', github: 'slact/queris'
+end
+
 
 gem 'hobbit', git: 'https://github.com/slact/hobbit.git'
 gem 'hobbit-contrib', git: 'https://github.com/slact/hobbit-contrib.git', require: 'hobbit/contrib'

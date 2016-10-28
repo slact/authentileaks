@@ -9,7 +9,7 @@ desc 'Start a console'
 task :console do
   ENV['RACK_ENV'] ||= 'development'
   require "pry"
-  require "pry-debundle"
+#  require "pry-debundle"
 
   require_relative 'config/application'
 

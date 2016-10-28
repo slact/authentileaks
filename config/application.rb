@@ -24,6 +24,12 @@ module Authentileaks
     def config
       @@config
     end
+    def self.config
+      @@config
+    end
+    def self.conf
+      @@config
+    end
     
     Queris.add_redis Redis.new(url: conf["redis_url"])
     

@@ -1,32 +1,50 @@
-%table.email
-  %tr.subject
-    %th="Subject"
-    %td=email.subject
-  %tr.date
-    %th="Date"
-    %td=email.date
-  %tr.from
-    %th="From"
-    %td=email.from
-  %tr.to
-    %th="To"
-    %td=email.to
-  %tr.cc
-    %th="Cc"
-    %td=email.cc
-  %tr.sig
-    %th="Signature"
-    %td{:"data-json" => email.sigs.to_json}
-    
-%pre=email.body
+
+.email
+  %table.headers
+    %tr.id
+      %th="ID"
+      %td
+        %a(href="https://wikileaks.org/podesta-emails/emailid/#{email.id}")=email.id
+    %tr.subject
+      %th="Subject"
+      %td=email.subject
+    %tr.date
+      %th="Date"
+      %td=email.date
+    %tr.from
+      %th="From"
+      %td=email.from
+    %tr.to
+      %th="To"
+      %td=email.to
+    %tr.cc
+      %th="Cc"
+      %td=email.cc
+    %tr.sig
+      %th="Signature"
+      %td{:"data-json" => email.sigs.to_json}
+      
+  %p.body=email.body
 
 :javascript
   "use strict";
   document.addEvent('domready', function() {
-    var container=document.getElement("table.email tr.sig td");
-    var data = container.getAttribute("data-json");
+    var data=document.getElement(".email table.headers tr.sig td").getAttribute("data-json");
     var sigs=JSON.decode(data);
-    sigs.each(function(sigdata) {
-      new Signature(sigdata, container);
-    });
+    parseSigs(sigs);
   });
+  
+  var email = document.getElement('.email');
+  
+  niceDate();
+  
+  if(email.getElement("tr.from td").get('text')=="") { //no email
+    email.addClass('hidden');
+    waitForEmail("#{email.id}");
+  }
+  else if(email.getElement("tr.cc td").get('text')=="") {
+    email.getElement("tr.cc").addClass('hidden');
+  }
+  
+  
+  
