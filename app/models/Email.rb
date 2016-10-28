@@ -5,11 +5,12 @@ class Email < Queris::Model
   
   attrs :from, :subject, :to, :cc, :date, :body, :leakname
   attrs :job_running, :signed, type: :bool
+  attr :time, type: Float
   
   index_attribute :signed
   index_attribute name: :all, attribute: :id, value: proc {|v| '(...)'}
   index_attribute_from model: DKIMSig, name: :sig_status, attribute: :status, key: :email_id
-  
+  index_range_attribute :time
   
   def stringy(val)
     if Enumerable === val
@@ -76,6 +77,16 @@ class Email < Queris::Model
   
   before_save do |v| #validation
     throw "invalid id" if v.id.nil?
+    v.noload do
+      if v.date && v.time.nil?
+        v.time= DateTime.parse(v.date).to_time.utc.to_f
+      end
+    end
+  end
+  
+  def delete
+    sigs.each { |sig| sig.delete } if @id
+    super
   end
   
   def self.count
