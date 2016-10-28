@@ -87,9 +87,7 @@ tr.sig-validating td::before {
   display: none;
 }
 
-.email .headers {
-  width:100%;
-}
+.email table.headers tr
 .email table.headers tr, .email table.headers td {
   vertical-align: top;
   padding: 2px;
@@ -100,25 +98,49 @@ tr.sig-validating td::before {
   margin-bottom:4px;
 }
 
+
+.email table.headers {
+  border-radius: 2px;
+  border: 1px solid #d8d8d8;
+  width:100%;
+  border-collapse: collapse;
+}
+.email table.headers th, .email table.headers td {
+  border: 1px solid #d8d8d8;
+  padding:4px;
+}
 .email table.headers th {
   width: 130px;
 }
-
 .email table.headers tr, .body {
-  background: #e5e5e5; 
+  background: #f4f7fb; 
+
+}
+.email table.headers tr th {
+  background: #edf2f9; 
 }
 
 .email .authentic {
-  background: #cfc !important; 
+  background: #eaffea !important; 
+}
+
+.email .authentic th {
+  background: #dbffdb !important;
 }
 
 .email .inauthentic {
-  background: #fcc !important;
+  background: #ffecec !important;
+}
+.email .inauthentic th {
+  background: #ffdddd !important;
 }
 
 .email .body {
-  margin: 2px;
+  border: 1px solid #d8d8d8;
+  border-radius: 2px;
+  border-top: none;
   padding:10px;
+  margin-top:0;
   white-space: pre-wrap;
   font-family: monospace;
 }
