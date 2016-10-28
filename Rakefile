@@ -17,12 +17,41 @@ task :console do
   pry
 end
 
-desc 'grab new leaks'
-task :newleaks  do
+desc 'grab leaks from files'
+task :parsefiles, [:path, :first, :last]  do |t, arg|
   ENV['RACK_ENV'] ||= 'development'
   require_relative 'config/application'
   ARGV.clear
 
-end
+  dir, first, last = arg[:path], arg[:first].to_i, arg[:last].to_i
+  worker = Authentileaks::EmailWorker.new
+  for i in first..last do
+    path="#{dir}/#{i}.eml"
+    begin
+      eml=File.read path
+    rescue
+      eml=nil
+    end
+    if eml
+      email=Email.find(i)
+      if email.nil?
+        email=Email.new(i)
+        begin
+          worker.parse(i, email, eml)
+          puts "parsed  email #{i}"
+        rescue Exception => e
+          email.sigs.each{ |sig| sig.delete }
+          email.delete
+          Authentileaks::EmailWorker.perform_async(i)
+          puts "parsing email #{i}, got error #{e}.  sidekiqing."
+        end
+      else
+        puts "skipped email #{i}"
+      end
+    else
+      puts "bad file #{path}"
+    end
+  end
+
 
 task default: :test
