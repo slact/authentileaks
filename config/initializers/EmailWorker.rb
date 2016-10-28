@@ -70,7 +70,6 @@ module Authentileaks
         
         sigs << dkim_sig
       end
-      sleep 10
       pub id, "sigs", sigs
       
       email.signed= !sigs.empty?
