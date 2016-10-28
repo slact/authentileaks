@@ -54,5 +54,25 @@ task :parsefiles, [:path, :first, :last]  do |t, arg|
   end
 end
 
+desc 'grab leaks from wikileaks'
+task :parseleaks, [:first, :last]  do |t, arg|
+  ENV['RACK_ENV'] ||= 'development'
+  require_relative 'config/application'
+  ARGV.clear
+
+  first, last = arg[:first].to_i, arg[:last].to_i
+  worker = Authentileaks::EmailWorker.new
+  for i in first..last do
+    email=Email.find(i)
+    if email.nil?
+      email=Email.new(i)
+      worker.perform(i)
+      puts "parsed  email #{i}"
+    else
+      puts "skipped email #{i}"
+    end
+  end
+end
+
 
 task default: :test
