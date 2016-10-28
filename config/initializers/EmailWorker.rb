@@ -42,12 +42,12 @@ module Authentileaks
       Typhoeus.post(pub_url, headers: {'Content-Type' => 'text/json'}, body: post_data.to_json)
     end
     
-    def parse(id, email, email_body)
+    def parse(id, email, email_body, nopub=false)
       email.parse(email_body)
 
       
       email.save
-      pub id, "email", email
+      pub id, "email", email unless nopub
       
       #display email
       
@@ -70,13 +70,13 @@ module Authentileaks
         
         sigs << dkim_sig
       end
-      pub id, "sigs", sigs
+      pub id, "sigs", sigs unless nopub
       
       email.signed= !sigs.empty?
       email.job_running= false
       email.save
       
-      pub id, "fin"
+      pub id, "fin" unless nopub
     end
     
     def perform(id)

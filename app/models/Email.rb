@@ -54,8 +54,9 @@ class Email < Queris::Model
     self.date= mail.date
     self.body, mime = getbody(mail)
     if mime=="text/html"
-      self.body =HtmlToPlainText.plain_text(self.body)
+      self.body= HtmlToPlainText.plain_text(self.body)
     end
+    self.body.encode!("utf-8", :invalid => :replace, :undef => :replace) if self.body
   end
   
   def sigs
