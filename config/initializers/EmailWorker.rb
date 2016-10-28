@@ -2,6 +2,11 @@ require "sidekiq"
 require "typhoeus"
 require "mail"
 require 'dkim'
+
+Sidekiq.configure_server do |config|
+  config.redis = { url: Authentileaks::Application.conf["redis_url"] }
+end
+
 module Authentileaks
   class EmailWorker
     include Sidekiq::Worker
@@ -65,7 +70,7 @@ module Authentileaks
         
         sigs << dkim_sig
       end
-      
+      sleep 10
       pub id, "sigs", sigs
       
       email.signed= !sigs.empty?

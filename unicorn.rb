@@ -19,20 +19,20 @@ worker_processes 20
 
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
-listen "/tmp/nchapp_unicorn.sock", :backlog => 64
+listen "/tmp/authentileaks_unicorn.sock", :backlog => 64
 listen 9293, :tcp_nopush => true
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 timeout 30
 
 # feel free to point this anywhere accessible on the filesystem
-pid "/tmp/nchapp_unicorn.pid"
+pid "/tmp/authentileaks_unicorn.pid"
 
 # By default, the Unicorn logger will write to stderr.
 # Additionally, some applications/frameworks log to stderr or stdout,
 # so prevent them from going to /dev/null when daemonized here:
-stderr_path "/var/log/nchapp/unicorn.stderr.log"
-stdout_path "/var/log/nchapp/unicorn.stdout.log"
+stderr_path "/var/log/authentileaks/unicorn.stderr.log"
+stdout_path "/var/log/authentileaks/unicorn.stdout.log"
 
 # combine Ruby 2.0.0+ with "preload_app true" for memory savings
 preload_app true
