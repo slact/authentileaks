@@ -1,7 +1,11 @@
 :markdown
-  Have you heard the people involved in the DNC and Podesta leaks claim that the Wikileaks email dumps cannot be trusted? Many of those implicated have said that the emails could have been &mdash; and indeed were &mdash; tampered with.
+  Have you heard the excuses? People and groups implicated in the [Podesta leaks](https://wikileaks.org/podesta-emails/)
+  claim that the emails from [Wikileaks](https://wikileaks.org/podesta-emails/)
+  [should not](https://www.youtube.com/watch?v=l0pqa-cvGAs)
+  [be trusted](https://www.youtube.com/watch?v=s-w0Fh_-UMo).
+  They say that the emails could have been &mdash; and indeed were &mdash; tampered with.
 
-  Unfortunately for them, they're lying and we can prove it. As [Robert Graham](https://twitter.com/erratarob)
+  Unfortunately for them, they're probably lying and we can prove it. As [Robert Graham](https://twitter.com/erratarob)
    of [ErrataSec](http://blog.erratasec.com/)
    [pointed out](https://twitter.com/ErrataRob/status/789621071200813056),
    many of the emails are cryptographically signed using the [DKIM system](https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail).
@@ -11,5 +15,5 @@
   This site provides an easy way to verify whether any given email from the dump can be authenticated. You can also [check the authenticity of the emails yourself](http://blog.erratasec.com/2016/10/politifact-yes-we-can-fact-check-kaines.html) by loading them with Thunderbird, but that takes too long. 
   
   So when someone asks, "How do we even know these emails are real?" &mdash; just send them here to find out.
-%p
+%p.stats
   So far, #{count} emails have been checked. Of those, #{count_signed} (#{count_signed_pct}%) have a signature, and #{signed_authentic_percent}% of those are authentic. #{unknown_or_inauthentic} either are not signed or have a non-matching or invalid signature.

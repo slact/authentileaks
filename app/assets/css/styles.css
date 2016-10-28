@@ -61,6 +61,12 @@ body {
   margin-right: 15px;
 }
 
+.page .stats {
+  font-style: italic;
+  
+}
+
+
 .email {
  margin-left:7px;
   margin-right:7px;
