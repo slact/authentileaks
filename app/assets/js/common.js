@@ -33,7 +33,7 @@ function waitForEmail(id) {
     switch(type) {
       case "loading":
         //do nothing
-        emailEl.removeClass('hidden').addClass('email-loading');
+        emailEl.addClass('email-loading').removeClass('hidden');
         emailEl.getElement('.headers .sig').addClass('sig-validating');
         emailEl.getElement('.headers .sig td').empty();
         break;
@@ -44,6 +44,7 @@ function waitForEmail(id) {
         break;
       
       case "sigs":
+        emailEl.removeClass('sig-validating');
         parseSigs(data);
         break;
         
