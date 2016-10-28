@@ -27,7 +27,7 @@ class Authentileaks::RootController < Authentileaks::Application
     #end
     
     unless email
-      EmailWorker.perform_async(params["id"])
+      Authentileaks::EmailWorker.perform_async(params["id"])
       email=Email.new(params["id"])
     end
     
