@@ -77,6 +77,7 @@ module Authentileaks
       email.save
       
       pub id, "fin" unless nopub
+      true
     end
     
     def perform(id)
@@ -94,10 +95,10 @@ module Authentileaks
       if resp.code != 200
         pub id, "error", "got response code #{resp.code}"
         email.delete
-        return 
+        return false
       end
       
-      parse id, email, resp.body
+      return parse id, email, resp.body
     end
   end
 end

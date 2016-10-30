@@ -66,8 +66,11 @@ task :parseleaks, [:first, :last]  do |t, arg|
     email=Email.find(i)
     if email.nil?
       email=Email.new(i)
-      worker.perform(i)
-      puts "parsed  email #{i}"
+      ret= worker.perform(i)
+      if ret
+        puts "parsed  email #{i}"
+      else
+        puts "email #{i} not found"
     else
       puts "skipped email #{i}"
     end
