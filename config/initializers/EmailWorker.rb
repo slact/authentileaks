@@ -10,7 +10,9 @@ end
 module Authentileaks
   class EmailWorker
     include Sidekiq::Worker
-
+    
+    LAST_LEAK_KEY="Authentileaks:last_leak_id"
+    
     class RawishEmail
       def initialize(raw)
         @raw=raw
@@ -45,6 +47,7 @@ module Authentileaks
     def parse(id, email, email_body, nopub=false)
       email.parse(email_body)
 
+      lastleak = LAST_LEAK_KEY
       
       email.save
       pub id, "email", email unless nopub
@@ -62,6 +65,8 @@ module Authentileaks
       
       sigs = []
       
+      
+      
       raw_sigs.each do |sig|
         dkim_sig = DKIMSig.new
         dkim_sig.email_id = email.id
@@ -75,6 +80,11 @@ module Authentileaks
       email.signed= !sigs.empty?
       email.job_running= false
       email.save
+      
+      last_leak=Queris.redis.get LAST_LEAK_KEY
+      if !last_leak || last_leak.to_i < email.id.to_i
+        Queris.redis.set LAST_LEAK_KEY, email.id
+      end
       
       pub id, "fin" unless nopub
       true

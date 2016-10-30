@@ -71,11 +71,42 @@ task :parseleaks, [:first, :last]  do |t, arg|
         puts "parsed  email #{i}"
       else
         puts "email #{i} not found"
+      end
     else
       puts "skipped email #{i}"
     end
   end
 end
 
+desc 'grab new leaks from wikileaks'
+task :newleaks  do |t, arg|
+  ENV['RACK_ENV'] ||= 'development'
+  require_relative 'config/application'
+  ARGV.clear
+
+  worker = Authentileaks::EmailWorker.new
+  first = Queris.redis.get Authentileaks::EmailWorker::LAST_LEAK_KEY
+  first ||= 1
+  i= first
+  n=0
+  loop do
+    email=Email.find(i)
+    if email.nil?
+      email=Email.new(i)
+      ret= worker.perform(i)
+      if ret
+        puts "parsed  email #{i}"
+        n+=1
+      else
+        puts "email #{i} not found"
+        break
+      end
+    else
+      puts "skipped email #{i}"
+    end
+    i+=1
+  end
+  puts "parsed #{n} emails"
+end
 
 task default: :test
