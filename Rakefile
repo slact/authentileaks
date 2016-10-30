@@ -87,7 +87,7 @@ task :newleaks  do |t, arg|
   worker = Authentileaks::EmailWorker.new
   first = Queris.redis.get Authentileaks::EmailWorker::LAST_LEAK_KEY
   first ||= 1
-  i= first
+  i= first.to_i
   n=0
   loop do
     email=Email.find(i)
