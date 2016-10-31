@@ -92,10 +92,10 @@ task :newleaks  do |t, arg|
   loop do
     email=Email.find(i)
     if email.nil?
-      email=Email.new(i)
       ret= worker.perform(i)
       if ret
         puts "parsed  email #{i}"
+        Queris.redis.set Authentileaks::EmailWorker::LAST_LEAK_KEY, i
         n+=1
       else
         puts "email #{i} not found"

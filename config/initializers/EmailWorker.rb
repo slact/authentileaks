@@ -46,8 +46,6 @@ module Authentileaks
     
     def parse(id, email, email_body, nopub=false)
       email.parse(email_body)
-
-      lastleak = LAST_LEAK_KEY
       
       email.save
       pub id, "email", email unless nopub
@@ -80,11 +78,6 @@ module Authentileaks
       email.signed= !sigs.empty?
       email.job_running= false
       email.save
-      
-      last_leak=Queris.redis.get LAST_LEAK_KEY
-      if !last_leak || last_leak.to_i < email.id.to_i
-        Queris.redis.set LAST_LEAK_KEY, email.id
-      end
       
       pub id, "fin" unless nopub
       true

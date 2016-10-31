@@ -10,7 +10,9 @@ class Email < Queris::Model
   index_attribute :signed
   index_attribute name: :all, attribute: :id, value: proc {|v| '(...)'}
   index_attribute_from model: DKIMSig, name: :sig_status, attribute: :status, key: :email_id
+  
   index_range_attribute :time
+  index_range_attribute :id
   
   def stringy(val)
     if Enumerable === val
