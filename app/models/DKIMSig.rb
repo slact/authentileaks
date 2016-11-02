@@ -1,5 +1,6 @@
 class DKIMSig < Queris::Model
   
+  attrs :raw
   attrs :email_id, type: Fixnum
   attrs :status, :domain, :algorithm, :headernames, :selector, :version;
   attrs :canon_body, :canon_headers, type: Fixnum
