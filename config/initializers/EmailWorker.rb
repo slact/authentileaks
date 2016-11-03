@@ -38,7 +38,6 @@ module Authentileaks
         if @body.length > max 
           n=0
           while n * max < @body.length
-            puts n, @body[n * max, max]
             yield @body[n * max, max]
             n+=1
           end
