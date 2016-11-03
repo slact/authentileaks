@@ -1,11 +1,14 @@
 require 'html_to_plain_text'
 require "mail"
 
+require_relative "DKIMSig"
+
 class Email < Queris::Model
   
   attrs :from, :subject, :to, :cc, :date, :body, :leakname
   attrs :job_running, :signed, type: :bool
   attr :time, type: Float
+  attr :length, type: Fixnum
   
   index_attribute :signed
   index_attribute name: :all, attribute: :id, value: proc {|v| '(...)'}
@@ -60,6 +63,7 @@ class Email < Queris::Model
       self.body= HtmlToPlainText.plain_text(self.body)
     end
     self.body.encode!("utf-8", :invalid => :replace, :undef => :replace) if self.body
+    self.length = message.length
   end
   
   def sigs
