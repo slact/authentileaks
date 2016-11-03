@@ -30,6 +30,22 @@ module Authentileaks
       def to_s
         "#{@headers}\r\n\r\n#{@body}"
       end
+      
+      def each_chunk
+        max = 64000
+        yield @headers
+        yield "\r\n\r\n"
+        if @body.length > max 
+          n=0
+          while n * max < @body.length
+            puts n, @body[n * max, max]
+            yield @body[n * max, max]
+            n+=1
+          end
+        else
+          yield @body
+        end
+      end
     end
     
     def conf
@@ -44,6 +60,36 @@ module Authentileaks
       Typhoeus.post(pub_url, headers: {'Content-Type' => 'text/json'}, body: post_data.to_json)
     end
     
+    
+    def parse_sigs(email, email_body)
+      rawmail = RawishEmail.new email_body
+      rawmail.rename_header("X-Google-DKIM-Signature", "DKIM-Signature")
+      
+      ver = DKIM::Verifier.new
+      
+      rawmail.each_chunk do |chunk|
+        ver.feed chunk
+      end
+      
+      raw_sigs = ver.finish
+      sigs = []
+      
+      raw_sigs.each do |sig|
+        dkim_sig = DKIMSig.new
+        dkim_sig.email_id = email.id
+        dkim_sig.parse(sig)
+        sigs << dkim_sig
+      end
+      
+      sigs
+    end
+    
+    def save_sigs(sigs)
+      sigs.each do |sig|
+        sig.save
+      end
+    end
+    
     def parse(id, email, email_body, nopub=false)
       email.parse(email_body)
       
@@ -52,27 +98,9 @@ module Authentileaks
       
       #display email
       
-      rawmail = RawishEmail.new email_body
-      rawmail.rename_header("X-Google-DKIM-Signature", "DKIM-Signature")
+      sigs = parse_sigs(email, email_body)
+      save_sigs(sigs)
       
-      ver = DKIM::Verifier.new
-      
-      ver.feed rawmail.to_s
-      
-      raw_sigs = ver.finish
-      
-      sigs = []
-      
-      
-      
-      raw_sigs.each do |sig|
-        dkim_sig = DKIMSig.new
-        dkim_sig.email_id = email.id
-        dkim_sig.parse(sig)
-        dkim_sig.save
-        
-        sigs << dkim_sig
-      end
       pub id, "sigs", sigs unless nopub
       
       email.signed= !sigs.empty?
