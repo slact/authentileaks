@@ -93,8 +93,11 @@ module Authentileaks
       email.parse(email_body)
       
       email.save
-      pub id, "email", email unless nopub
-      
+      begin
+        pub id, "email", email unless nopub
+      rescue Encoding::UndefinedConversionError
+        pub id, "error", "error jsonifying email, some kind of encoding problem"
+      end
       #display email
       
       sigs = parse_sigs(email, email_body)

@@ -25,6 +25,16 @@ class Email < Queris::Model
     end
   end
   
+  def getcharset(mail)
+    return mail.charset if mail.charset
+    if mail.multipart?
+      mail.parts.each do |part|
+        charset= getcharset(part)
+        return charset if charset
+      end
+    end
+  end
+  
   def getbody(mail)
     bestbody={}
     
@@ -53,8 +63,12 @@ class Email < Queris::Model
   
   def parse(message)
     mail= Mail.new(message)
+    
+    #charset= getcharset(mail)
+    
     self.from= stringy(mail.from)
     self.subject= mail.subject
+    self.subject.encode!("utf-8", :invalid => :replace, :undef => :replace) if self.subject
     self.to= stringy(mail.to)
     self.cc= stringy(mail.cc)
     self.date= mail.date
